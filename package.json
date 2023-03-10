@@ -1,0 +1,9 @@
+{
+  "name": "the-list",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:falsefalse/the-list.git",
+  "author": "Ilya Furman <smashlong@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
