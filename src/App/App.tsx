@@ -35,7 +35,15 @@ function App() {
     <>
       {showFps && <FpsView />}
 
-      <button onClick={() => setShowFps(!showFps)}>Toggle FPS counter</button>
+      <div className="gap">
+        <button onClick={() => setShowFps(!showFps)}>Toggle FPS counter</button>
+        <code>
+          👀{' '}
+          <a href="https://github.com/falsefalse/the-list">
+            Check out the code
+          </a>
+        </code>
+      </div>
 
       <header>
         <h3>1k items</h3>

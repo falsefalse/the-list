@@ -12,6 +12,7 @@ button {
   border: 2px solid black;
   background-color: white;
   padding: 10px 20px;
+  font-family: monospace;
 }
 button:active {
   transform: translate(1px, 1px);
@@ -28,4 +29,12 @@ header > button {
 header > h3 {
   text-align: center;
   line-height: 3rem;
+}
+
+.gap {
+  display: flex;
+  flex-direction: horizontal;
+  gap: 1.5rem;
+
+  align-items: center;
 }
