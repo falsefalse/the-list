@@ -1,0 +1,53 @@
+.VList-wrapper {
+  --columns: 3; /* or pass from jsx */
+  border: 4px solid black;
+  overflow-x: hidden;
+}
+
+.VList-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.VList-wrapper th,
+.VList-wrapper td {
+  width: calc(100% / var(--columns));
+
+  height: 100%;
+  padding: 0 20px;
+  text-align: center;
+  vertical-align: middle;
+  border: 0 solid black;
+
+  min-width: 140px;
+}
+
+.VList-wrapper th {
+  height: var(--row-height);
+  border-width: 1px;
+  border-left-width: 3px;
+  border-right-width: 3px;
+}
+.VList-wrapper td {
+  border-width: 2px;
+}
+
+.VList-wrapper .VList-table {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: var(--table-height);
+}
+
+.VList-wrapper .VList-table > tbody {
+  position: relative;
+  display: table;
+  width: calc(100% + 4px * var(--columns));
+  height: var(--tbody-height);
+}
+.VList-wrapper .VList-table > tbody > tr {
+  position: absolute;
+  display: table;
+  width: 100%;
+  height: var(--row-height);
+}
