@@ -18,10 +18,14 @@ const item = (id: string): Record<string, string> => ({
   price: (random() * 50).toFixed(2)
 })
 
-const thousandItems = fill(1000).map((_, id) => item(String(id + 1)))
-const hundredThousandsItems = fill(100 * 1000).map((_, id) =>
-  item(String(id + 1))
-)
+const oneK = fill(1000).map((_, id) => item(String(id + 1)))
+const tenK = fill(10 * 1000).map((_, id) => item(String(id + 1)))
+const hundredK = fill(100 * 1000).map((_, id) => item(String(id + 1)))
+
+const addRow = (collection: Record<string, string>[]) => [
+  ...collection,
+  item(String(collection.length + 1))
+]
 
 const listProps = {
   rowHeight: 85,
@@ -31,12 +35,15 @@ const listProps = {
 function App() {
   const [showFps, setShowFps] = useState(true)
 
+  const [rows, setRows] = useState({ oneK, tenK, hundredK })
+
   return (
     <>
       {showFps && <FpsView />}
 
       <div className="gap">
         <button onClick={() => setShowFps(!showFps)}>Toggle FPS counter</button>
+
         <code>
           👀{' '}
           <a href="https://github.com/falsefalse/the-list">
@@ -47,15 +54,45 @@ function App() {
 
       <header>
         <h3>1k items</h3>
+
+        <button
+          onClick={() => {
+            setRows(rs => ({ ...rs, oneK: addRow(rs.oneK) }))
+          }}
+        >
+          Add a new item
+        </button>
       </header>
 
-      <VList rows={thousandItems} {...listProps} />
+      <VList rows={rows.oneK} {...listProps} />
+
+      <header>
+        <h3>10k items</h3>
+
+        <button
+          onClick={() => {
+            setRows(rs => ({ ...rs, tenK: addRow(rs.tenK) }))
+          }}
+        >
+          Add a new item
+        </button>
+      </header>
+
+      <VList rows={rows.tenK} {...listProps} />
 
       <header>
         <h3>100k items</h3>
+
+        <button
+          onClick={() => {
+            setRows(rs => ({ ...rs, hundredK: addRow(rs.hundredK) }))
+          }}
+        >
+          Add a new item
+        </button>
       </header>
 
-      <VList rows={hundredThousandsItems} {...listProps} />
+      <VList rows={rows.hundredK} {...listProps} />
     </>
   )
 }

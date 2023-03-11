@@ -2,6 +2,16 @@
   --columns: 3; /* or pass from jsx */
   border: 4px solid black;
   overflow-x: hidden;
+  position: relative;
+}
+
+.VList-buttons {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+.VList-buttons button {
+  padding: 5px 10px;
 }
 
 .VList-wrapper table {
@@ -24,12 +34,12 @@
 
 .VList-wrapper th {
   height: var(--row-height);
-  border-width: 1px;
+  border-width: 2px;
   border-left-width: 3px;
   border-right-width: 3px;
 }
 .VList-wrapper td {
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .VList-wrapper .VList-table {
@@ -42,7 +52,7 @@
 .VList-wrapper .VList-table > tbody {
   position: relative;
   display: table;
-  width: calc(100% + 4px * var(--columns));
+  width: calc(100% + 5px * var(--columns));
   height: var(--tbody-height);
 }
 .VList-wrapper .VList-table > tbody > tr {
