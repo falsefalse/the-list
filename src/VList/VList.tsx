@@ -3,46 +3,46 @@ import React, {
   useMemo,
   useCallback,
   CSSProperties,
-  useRef,
-  useLayoutEffect
+  forwardRef,
+  ForwardedRef
 } from 'react'
 import throttle from 'lodash.throttle'
 
-import animate from './animate'
 import { Row, HeaderRow } from './Rows'
 
 import './VList.css'
 
 const { ceil, floor, max } = Math
 
+const SCROLL_THROTTLE = 25
+
 type Props = {
   rowHeight: number
-  tableHeight: number
+  height: number
   rows: Record<string, string>[]
 }
 
 type ScrollState = {
   start: number
   end: number
-  scrollTop: number
 }
 
-const SCROLL_THROTTLE = 25
-
-function VList({ rows, rowHeight, tableHeight }: Props) {
+function VList(
+  { rows, rowHeight, height }: Props,
+  tableRef: ForwardedRef<HTMLTableElement>
+) {
   const numberOfRowsToRender = useMemo(
     // double the visible amout so there is always something to scroll down
-    () => ceil((tableHeight * 2) / rowHeight),
-    [tableHeight, rowHeight]
+    () => ceil((height * 2) / rowHeight),
+    [height, rowHeight]
   )
 
   const [scrollState, setScrollState] = useState<ScrollState>({
     start: 0,
-    end: numberOfRowsToRender,
-    scrollTop: 0
+    end: numberOfRowsToRender
   })
 
-  // lint has no idea about `throttle`, and it's ok
+  // lint has no idea about `throttle`, its okay
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = useCallback(
     throttle(
@@ -52,8 +52,7 @@ function VList({ rows, rowHeight, tableHeight }: Props) {
 
         setScrollState({
           start,
-          end: start + numberOfRowsToRender,
-          scrollTop
+          end: start + numberOfRowsToRender
         })
       },
       SCROLL_THROTTLE,
@@ -62,17 +61,10 @@ function VList({ rows, rowHeight, tableHeight }: Props) {
     []
   )
 
-  const tableRef = useRef<HTMLTableElement>(null)
-  useLayoutEffect(() => {
-    tableRef.current?.scrollTo({
-      top: scrollState.scrollTop
-    })
-  }, [scrollState.scrollTop])
-
   const visibleRows = useMemo(() => {
     let { start: index, end } = scrollState
 
-    // there also should be something to scroll up
+    // there also should be something to scroll up to
     index = max(0, index - numberOfRowsToRender)
 
     return rows
@@ -83,47 +75,13 @@ function VList({ rows, rowHeight, tableHeight }: Props) {
   const tbodyHeight = rowHeight * rows.length
 
   const cssVars = {
-    '--table-height': `${tableHeight}px`,
+    '--table-height': `${height}px`,
     '--tbody-height': `${tbodyHeight}px`,
     '--row-height': `${rowHeight}px`
   } as CSSProperties
 
-  const animateScroll = useMemo(
-    () => ({
-      from: scrollState.scrollTop,
-      onUpdate: (scrollTop: number) =>
-        setScrollState(state => ({ ...state, scrollTop }))
-    }),
-    [scrollState.scrollTop]
-  )
-
-  // when new row gets added we scroll to the end
-  const initialRows = useRef(rows.length)
-  useLayoutEffect(() => {
-    if (initialRows.current === rows.length) return
-
-    animate({ ...animateScroll, to: tbodyHeight })
-    // don't care about anything but the `rows`
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows])
-
   return (
     <div className="VList-wrapper" style={cssVars}>
-      <div className="VList-buttons gap">
-        <button
-          title="Scroll to top"
-          onClick={() => animate({ ...animateScroll, to: 0 })}
-        >
-          ⬆️
-        </button>
-        <button
-          title="Scroll to bottom"
-          onClick={() => animate({ ...animateScroll, to: tbodyHeight })}
-        >
-          ⬇️
-        </button>
-      </div>
-
       <table>
         <thead>
           <HeaderRow />
@@ -137,4 +95,4 @@ function VList({ rows, rowHeight, tableHeight }: Props) {
   )
 }
 
-export default VList
+export default forwardRef(VList)

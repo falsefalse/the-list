@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { FpsView } from 'react-fps'
 
-import VList from '../VList'
+import VList, { Actions } from '../VList'
 
 import './App.css'
 
@@ -29,16 +29,42 @@ const addRow = (collection: Record<string, string>[]) => [
 
 const listProps = {
   rowHeight: 85,
-  tableHeight: 420
+  height: 420
 }
 
-function App() {
-  const [showFps, setShowFps] = useState(true)
+function ListWithActions({
+  rows: passedRows
+}: {
+  rows: Record<string, string>[]
+}) {
+  const tableRef = useRef<HTMLTableElement | null>(null)
 
-  const [rows, setRows] = useState({ oneK, tenK, hundredK })
+  const [rows, setRows] = useState(passedRows)
+
+  const tbodyHeight = listProps.rowHeight * rows.length
 
   return (
     <>
+      <header className="gap">
+        <h3>{rows.length} items</h3>
+
+        <Actions
+          height={tbodyHeight}
+          handleAdd={() => setRows(rows => [...addRow(rows)])}
+          scrollRef={tableRef}
+        />
+      </header>
+
+      <VList rows={rows} ref={tableRef} {...listProps} />
+    </>
+  )
+}
+
+function App() {
+  const [showFps, setShowFps] = useState(false)
+
+  return (
+    <div className="App">
       {showFps && <FpsView />}
 
       <div className="gap">
@@ -52,48 +78,12 @@ function App() {
         </code>
       </div>
 
-      <header>
-        <h3>1k items</h3>
+      <ListWithActions rows={oneK} />
 
-        <button
-          onClick={() => {
-            setRows(rs => ({ ...rs, oneK: addRow(rs.oneK) }))
-          }}
-        >
-          Add a new item
-        </button>
-      </header>
+      <ListWithActions rows={tenK} />
 
-      <VList rows={rows.oneK} {...listProps} />
-
-      <header>
-        <h3>10k items</h3>
-
-        <button
-          onClick={() => {
-            setRows(rs => ({ ...rs, tenK: addRow(rs.tenK) }))
-          }}
-        >
-          Add a new item
-        </button>
-      </header>
-
-      <VList rows={rows.tenK} {...listProps} />
-
-      <header>
-        <h3>100k items</h3>
-
-        <button
-          onClick={() => {
-            setRows(rs => ({ ...rs, hundredK: addRow(rs.hundredK) }))
-          }}
-        >
-          Add a new item
-        </button>
-      </header>
-
-      <VList rows={rows.hundredK} {...listProps} />
-    </>
+      <ListWithActions rows={hundredK} />
+    </div>
   )
 }
 

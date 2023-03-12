@@ -1,3 +1,5 @@
+import { useState, useLayoutEffect, RefObject } from 'react'
+
 function getValue(
   start: number,
   end: number,
@@ -8,6 +10,7 @@ function getValue(
   return start + (end - start) * easing(elapsed / duration)
 }
 
+// cubic
 function easing(time: number) {
   return 1 - --time * time * time * time
 }
@@ -19,12 +22,7 @@ type AnimateParams = {
   duration?: number
 }
 
-export default function animate({
-  from,
-  to,
-  onUpdate,
-  duration = 800
-}: AnimateParams) {
+function animate({ from, to, onUpdate, duration = 800 }: AnimateParams) {
   const startTime = performance.now()
 
   const tick = () => {
@@ -38,4 +36,24 @@ export default function animate({
   }
 
   tick()
+}
+
+export default function useAnimate<T extends HTMLElement>(
+  scrollRef: RefObject<T>
+) {
+  const [scrollTop, setScrollTop] = useState(0)
+
+  useLayoutEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollTop })
+  }, [scrollTop, scrollRef])
+
+  return {
+    smoothScrollTo: (to: number) => {
+      animate({
+        from: scrollTop,
+        to,
+        onUpdate: scrollTop => setScrollTop(scrollTop)
+      })
+    }
+  }
 }
