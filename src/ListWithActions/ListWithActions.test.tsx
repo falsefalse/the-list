@@ -16,9 +16,6 @@ window.HTMLElement.prototype.scrollTo = function (optsOrNumber) {
   })
 }
 
-const rowHeight = 5 as const
-const height = 15 as const
-
 function getFirstColumn(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('tbody tr td:first-child').values()
@@ -29,16 +26,25 @@ function getRows(container: HTMLElement) {
   return container.querySelectorAll('tbody tr')
 }
 
+const rowHeight = 5 as const
+const height = 15 as const
+
 function scrollToRow(to: number) {
   const scrollEl = screen.getByTestId('vlist-table')
-  fireEvent.scroll(scrollEl, {
-    target: { scrollTop: to * rowHeight }
-  })
+  fireEvent.scroll(scrollEl, { target: { scrollTop: to * rowHeight } })
   act(() => jest.runAllTimers())
 }
 
 function arrangeTest(rows: Props['rows']) {
-  return render(<ListWithActions {...{ rowHeight, height, rows }} />)
+  const result = render(<ListWithActions {...{ rowHeight, height, rows }} />)
+  const scrollEl = result.getByTestId('vlist-table')
+
+  Object.defineProperty(scrollEl, 'scrollHeight', {
+    configurable: true,
+    value: rowHeight * rows.length
+  })
+
+  return result
 }
 
 const twoRows = fill(2).map((_, i) => newItem(i))
@@ -93,7 +99,7 @@ describe('ListWithActions', () => {
       // to the middle
       scrollToRow(~~(25 / 2))
 
-      // twice as much items so we have something to scroll
+      // enough items to scroll both ways
       expect(getFirstColumn(container)).toStrictEqual([
         'Item #7',
         'Item #8',
@@ -112,6 +118,7 @@ describe('ListWithActions', () => {
       // to the end
       scrollToRow(25)
 
+      // enough items to scroll to top
       expect(getFirstColumn(container)).toStrictEqual([
         'Item #20',
         'Item #21',

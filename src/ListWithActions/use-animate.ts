@@ -65,9 +65,10 @@ export default function useAnimate<T extends HTMLElement>(
   scrollRef: RefObject<T>
 ) {
   const [scrollTop, setScrollTop] = useState(0)
-  const handleScroll = useThrottledScrollHandler(scrollTop =>
+
+  const handleScroll = useThrottledScrollHandler(scrollTop => {
     setScrollTop(scrollTop)
-  )
+  })
 
   useEffect(() => {
     const scrollEl = scrollRef.current
@@ -83,10 +84,16 @@ export default function useAnimate<T extends HTMLElement>(
   }, [scrollTop, scrollRef])
 
   return {
-    smoothScrollTo: (to: number) =>
+    smoothScrollToStart: () =>
       animate({
         from: scrollTop,
-        to,
+        to: 0,
+        onUpdate: scrollTop => setScrollTop(scrollTop)
+      }),
+    smoothScrollToEnd: () =>
+      animate({
+        from: scrollTop,
+        to: scrollRef.current?.scrollHeight || 0,
         onUpdate: scrollTop => setScrollTop(scrollTop)
       })
   }

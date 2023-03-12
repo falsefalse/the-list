@@ -26,8 +26,6 @@ export default function ListWithActions({
 
   const [rows, setRows] = useState(passedRows)
 
-  const tbodyHeight = rowHeight * rows.length
-
   return (
     <div className="ListWithActions">
       <header>
@@ -36,7 +34,6 @@ export default function ListWithActions({
         </h3>
 
         <Actions
-          height={tbodyHeight}
           handleAdd={() => setRows(rows => [...addRow(rows)])}
           scrollRef={tableRef}
         />

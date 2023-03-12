@@ -28,11 +28,7 @@ function VList(
   { rows, rowHeight, height }: Props,
   tableRef: ForwardedRef<HTMLTableElement>
 ) {
-  const numberOfRowsToRender = useMemo(
-    // double the visible amout so there is always something to scroll down
-    () => ceil((height * 2) / rowHeight),
-    [height, rowHeight]
-  )
+  const numberOfRowsToRender = ceil(height / rowHeight) * 2
 
   const [scrollState, setScrollState] = useState<ScrollState>({
     start: 0,
