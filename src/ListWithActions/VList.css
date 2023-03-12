@@ -24,18 +24,24 @@
 
 .VList-wrapper th {
   height: var(--row-height);
-  border-width: 2px;
+  border-bottom-width: 2px;
+}
+.VList-wrapper th + th {
   border-left-width: 2px;
-  border-right-width: 2px;
 }
 .VList-wrapper td {
-  border-width: 1px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+.VList-wrapper td + td {
+  border-left-width: 1px;
 }
 
 .VList-wrapper .VList-table {
   display: block;
   overflow-y: scroll;
   height: var(--table-height);
+  margin-bottom: -1px;
 
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -47,12 +53,12 @@
 .VList-wrapper .VList-table > tbody {
   position: relative;
   display: table;
-  width: calc(100% - 1px); /* account for right border */
+  width: inherit;
   height: var(--tbody-height);
 }
 .VList-wrapper .VList-table > tbody > tr {
   position: absolute;
   display: table;
-  width: 100%;
+  width: inherit;
   height: var(--row-height);
 }
