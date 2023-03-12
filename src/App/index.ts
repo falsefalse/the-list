@@ -1,1 +1,1 @@
-export { default, newItem } from './App'
+export { default } from './App'

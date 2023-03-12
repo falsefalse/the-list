@@ -1,33 +1,36 @@
 import React, { useState, useRef } from 'react'
 
-import { newItem } from '../App'
+import { newItem } from '../utils'
 
 import VList from './VList'
 import Actions from './Actions'
 
+import './ListWithActions.css'
+
 const addRow = (collection: Record<string, string>[]) => [
   ...collection,
-  newItem(String(collection.length + 1))
+  newItem(collection.length + 1)
 ]
 
-const listProps = {
-  rowHeight: 85,
-  height: 420
-}
-
-type Props = {
+export type Props = {
   rows: Record<string, string>[]
+  rowHeight?: number
+  height?: number
 }
 
-export default function ListWithActions({ rows: passedRows }: Props) {
+export default function ListWithActions({
+  rows: passedRows,
+  rowHeight = 85,
+  height = 420
+}: Props) {
   const tableRef = useRef<HTMLTableElement | null>(null)
 
   const [rows, setRows] = useState(passedRows)
 
-  const tbodyHeight = listProps.rowHeight * rows.length
+  const tbodyHeight = rowHeight * rows.length
 
   return (
-    <>
+    <div className="ListWithActions">
       <header>
         <h3>
           <code>{rows.length}</code> items
@@ -40,7 +43,7 @@ export default function ListWithActions({ rows: passedRows }: Props) {
         />
       </header>
 
-      <VList rows={rows} ref={tableRef} {...listProps} />
-    </>
+      <VList rows={rows} ref={tableRef} rowHeight={rowHeight} height={height} />
+    </div>
   )
 }
