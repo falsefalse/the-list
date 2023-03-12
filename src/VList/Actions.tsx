@@ -25,12 +25,15 @@ export default function Actions<T extends HTMLElement>({
       >
         Add new item
       </button>
-      <button title="Scroll to top" onClick={() => smoothScrollTo(0)}>
-        ⬆️
-      </button>
-      <button title="Scroll to bottom" onClick={() => smoothScrollTo(height)}>
-        ⬇️
-      </button>
+
+      <div className="gap gap-small">
+        <button title="Scroll to top" onClick={() => smoothScrollTo(0)}>
+          ⬆️
+        </button>
+        <button title="Scroll to bottom" onClick={() => smoothScrollTo(height)}>
+          ⬇️
+        </button>
+      </div>
     </div>
   )
 }

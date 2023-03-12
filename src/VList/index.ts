@@ -1,2 +1,1 @@
-export { default } from './VList'
-export { default as Actions } from './Actions'
+export { default } from './ListWithActions'

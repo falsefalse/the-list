@@ -7,11 +7,25 @@
   margin: 3rem auto 1.5rem;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .App header > h3 {
   text-align: center;
   line-height: 3rem;
+  flex-grow: 1;
+  margin-right: -18.5rem;
+}
+@media (max-width: 768px) {
+  .App header > h3 {
+    margin-right: -13rem;
+  }
+}
+@media (max-width: 640px) {
+  .App header > h3 {
+    text-align: left;
+    margin-right: auto;
+  }
 }
 
 .App header > button {

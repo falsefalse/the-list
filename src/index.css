@@ -8,17 +8,15 @@
 
 :root {
   --gap: 2rem;
-  --button-padding: 1rem 2rem;
+  --button-padding: 0.5rem 1rem;
   --cell-padding: 0 2rem;
-  --cell-height: 85px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   :root {
     --gap: 1rem;
-    --button-padding: 0.5rem 1rem;
+    --button-padding: 0.25rem 0.5rem;
     --cell-padding: 0 1rem;
-    --cell-height: 40px;
   }
 }
 
@@ -43,6 +41,9 @@ code {
   gap: var(--gap);
 
   align-items: center;
+}
+.gap.gap-small {
+  gap: calc(var(--gap) / 2);
 }
 
 button {
