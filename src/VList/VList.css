@@ -5,15 +5,6 @@
   position: relative;
 }
 
-.VList-buttons {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-}
-.VList-buttons button {
-  padding: 5px 10px;
-}
-
 .VList-wrapper table {
   width: 100%;
   border-collapse: collapse;
@@ -24,12 +15,12 @@
   width: calc(100% / var(--columns));
 
   height: 100%;
-  padding: 0 20px;
+  padding: var(--cell-padding);
   text-align: center;
   vertical-align: middle;
   border: 0 solid black;
 
-  min-width: 140px;
+  /*min-width: 140px;*/
 }
 
 .VList-wrapper th {

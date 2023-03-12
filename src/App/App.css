@@ -1,22 +1,19 @@
-header {
-  position: relative;
-  min-height: 3rem;
-  margin: 3rem auto 2rem;
+.App {
+  max-width: 60rem;
+  margin: auto;
 }
 
-h3 {
-  margin: 0;
+.App header {
+  margin: 3rem auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-header > button {
-  height: 100%;
-
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-header > h3 {
+.App header > h3 {
   text-align: center;
   line-height: 3rem;
+}
+
+.App header > button {
+  height: 100%;
 }
