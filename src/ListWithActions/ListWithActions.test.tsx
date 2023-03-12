@@ -1,11 +1,14 @@
 import React from 'react'
 import { render, screen, fireEvent, act } from '@testing-library/react'
+
 import ListWithActions, { Props } from './ListWithActions'
 import { fill, newItem } from '../utils'
 
 // poor mans `scrollTo` implementation
-window.HTMLElement.prototype.scrollTo = function (options) {
-  const scrollTop = typeof options != 'number' ? options?.top : 0
+window.HTMLElement.prototype.scrollTo = function (optsOrNumber) {
+  const scrollTop =
+    typeof optsOrNumber == 'number' ? optsOrNumber : optsOrNumber?.top
+
   fireEvent.scroll(this, { target: { scrollTop } })
 
   act(() => {

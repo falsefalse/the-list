@@ -83,12 +83,11 @@ export default function useAnimate<T extends HTMLElement>(
   }, [scrollTop, scrollRef])
 
   return {
-    smoothScrollTo: (to: number) => {
+    smoothScrollTo: (to: number) =>
       animate({
         from: scrollTop,
         to,
         onUpdate: scrollTop => setScrollTop(scrollTop)
       })
-    }
   }
 }

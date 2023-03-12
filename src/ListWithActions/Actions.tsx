@@ -16,7 +16,7 @@ export default function Actions<T extends HTMLElement>({
   const { smoothScrollTo } = useAnimate(scrollRef)
 
   return (
-    <div className="VList-actions gap">
+    <div className="gap">
       <button
         onClick={() => {
           handleAdd()

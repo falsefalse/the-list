@@ -12,7 +12,6 @@
 .VList-wrapper th,
 .VList-wrapper td {
   width: calc(100% / var(--columns));
-
   height: 100%;
   padding: var(--cell-padding);
   text-align: center;

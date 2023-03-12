@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 
 import { newItem } from '../utils'
-
 import VList from './VList'
 import Actions from './Actions'
 
