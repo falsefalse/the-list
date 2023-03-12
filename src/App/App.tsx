@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FpsView } from 'react-fps'
 
-import ListWithActions from '../VList'
+import ListWithActions from '../ListWithActions'
 
 import { fill, newItem } from '../utils'
 
