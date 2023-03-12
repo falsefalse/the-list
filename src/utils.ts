@@ -4,8 +4,9 @@ const randomString = () => random().toString(20).substring(2)
 
 export const fill = (l: number) => new Array(l).fill(0)
 
-export const newItem = (id: number | string): Record<string, string> => {
-  id = String(id)
+export const newItem = (i: number): Record<string, string> => {
+  // we want to start from 1
+  const id = String(i + 1)
 
   return {
     id,

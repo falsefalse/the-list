@@ -7,9 +7,9 @@ import { fill, newItem } from '../utils'
 
 import './App.css'
 
-const oneK = fill(1000).map((_, id) => newItem(id + 1))
-const tenK = fill(10 * 1000).map((_, id) => newItem(id + 1))
-const hundredK = fill(100 * 1000).map((_, id) => newItem(id + 1))
+const oneK = fill(1000).map((_, i) => newItem(i))
+const tenK = fill(10 * 1000).map((_, i) => newItem(i))
+const hundredK = fill(100 * 1000).map((_, i) => newItem(i))
 
 function App() {
   const [showFps, setShowFps] = useState(false)

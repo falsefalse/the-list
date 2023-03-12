@@ -9,7 +9,7 @@ import './ListWithActions.css'
 
 const addRow = (collection: Record<string, string>[]) => [
   ...collection,
-  newItem(collection.length + 1)
+  newItem(collection.length)
 ]
 
 export type Props = {
