@@ -75,7 +75,12 @@ function VList(
         </thead>
       </table>
 
-      <table className="VList-table" onScroll={handleScroll} ref={tableRef}>
+      <table
+        className="VList-table"
+        onScroll={handleScroll}
+        ref={tableRef}
+        data-testid="vlist-table"
+      >
         <tbody>{visibleRows}</tbody>
       </table>
     </div>
