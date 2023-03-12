@@ -1,20 +1,17 @@
 import React, {
   useState,
   useMemo,
-  useCallback,
   CSSProperties,
   forwardRef,
   ForwardedRef
 } from 'react'
-import throttle from 'lodash.throttle'
 
 import { Row, HeaderRow } from './Rows'
+import { useThrottledScrollHandler } from './use-animate'
 
 import './VList.css'
 
 const { ceil, floor, max } = Math
-
-const SCROLL_THROTTLE = 25
 
 type Props = {
   rowHeight: number
@@ -42,24 +39,14 @@ function VList(
     end: numberOfRowsToRender
   })
 
-  // lint has no idea about `throttle`, its okay
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleScroll = useCallback(
-    throttle(
-      ({ target }) => {
-        const scrollTop = (target as HTMLElement).scrollTop
-        const start = floor(scrollTop / rowHeight)
+  const handleScroll = useThrottledScrollHandler(scrollTop => {
+    const start = floor(scrollTop / rowHeight)
 
-        setScrollState({
-          start,
-          end: start + numberOfRowsToRender
-        })
-      },
-      SCROLL_THROTTLE,
-      { leading: false }
-    ),
-    []
-  )
+    setScrollState({
+      start,
+      end: start + numberOfRowsToRender
+    })
+  })
 
   const visibleRows = useMemo(() => {
     let { start: index, end } = scrollState

@@ -1,4 +1,11 @@
-import { useState, useLayoutEffect, RefObject } from 'react'
+import {
+  useEffect,
+  useCallback,
+  useState,
+  useLayoutEffect,
+  RefObject
+} from 'react'
+import throttle from 'lodash.throttle'
 
 function getValue(
   start: number,
@@ -38,10 +45,38 @@ function animate({ from, to, onUpdate, duration = 800 }: AnimateParams) {
   tick()
 }
 
+export function useThrottledScrollHandler(
+  callback: (scrollTop: number) => void,
+  throttleMsec = 25
+) {
+  // lint doesn't know about `throttle`, its okay
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useCallback(
+    throttle(
+      ({ target }) => callback((target as HTMLElement).scrollTop),
+      throttleMsec,
+      { leading: false }
+    ),
+    []
+  )
+}
+
 export default function useAnimate<T extends HTMLElement>(
   scrollRef: RefObject<T>
 ) {
   const [scrollTop, setScrollTop] = useState(0)
+  const handleScroll = useThrottledScrollHandler(scrollTop =>
+    setScrollTop(scrollTop)
+  )
+
+  useEffect(() => {
+    const scrollEl = scrollRef.current
+    scrollEl?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      scrollEl?.removeEventListener('scroll', handleScroll)
+    }
+  }, [handleScroll, scrollRef])
 
   useLayoutEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollTop })
