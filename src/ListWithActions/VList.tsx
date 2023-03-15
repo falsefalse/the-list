@@ -19,43 +19,28 @@ type Props = {
   rows: Record<string, string>[]
 }
 
-type ScrollState = {
-  start: number
-  end: number
-}
-
 function VList(
   { rows, rowHeight, height }: Props,
   forwardedRef: ForwardedRef<HTMLTableElement>
 ) {
-  const numberOfRowsToRender = ceil(height / rowHeight) * 2
-
-  const [scrollState, setScrollState] = useState<ScrollState>({
-    start: 0,
-    end: numberOfRowsToRender
-  })
+  const [currentRow, setCurrentRow] = useState(0)
 
   const scrollRef = useForwardRef(forwardedRef)
 
-  useThrottledScrollHandler(scrollRef, scrollTop => {
-    const start = floor(scrollTop / rowHeight)
+  useThrottledScrollHandler(scrollRef, scrollTop =>
+    setCurrentRow(floor(scrollTop / rowHeight))
+  )
 
-    setScrollState({
-      start,
-      end: start + numberOfRowsToRender
-    })
-  })
+  const numberOfRowsThatFit = ceil(height / rowHeight)
 
   const visibleRows = useMemo(() => {
-    let { start: index, end } = scrollState
-
-    // there also should be something to scroll up to
-    index = max(0, index - numberOfRowsToRender)
+    let start = max(0, currentRow - numberOfRowsThatFit)
+    let end = currentRow + numberOfRowsThatFit * 2
 
     return rows
-      .slice(index, end)
-      .map(r => <Row key={r.id} row={r} index={index++} height={rowHeight} />)
-  }, [scrollState, rows, rowHeight, numberOfRowsToRender])
+      .slice(start, end)
+      .map(r => <Row key={r.id} row={r} index={start++} height={rowHeight} />)
+  }, [currentRow, rows, rowHeight, numberOfRowsThatFit])
 
   const tbodyHeight = rowHeight * rows.length
 

@@ -81,7 +81,7 @@ export function useThrottledScrollHandler<T extends HTMLElement>(
 }
 
 export function useAnimate<T extends HTMLElement>(scrollRef: RefObject<T>) {
-  const [scrollTop, setScrollTop] = useState(0)
+  const [scrollTop, setScrollTop] = useState<number>()
 
   useLayoutEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollTop })
