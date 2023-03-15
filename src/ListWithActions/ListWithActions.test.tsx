@@ -16,35 +16,44 @@ window.HTMLElement.prototype.scrollTo = function (optsOrNumber) {
   })
 }
 
-function getFirstColumn(container: HTMLElement) {
+function getFirstColumn(container: Element) {
   return Array.from(
     container.querySelectorAll('tbody tr td:first-child').values()
-  ).map(tr => tr.textContent)
+  ).map(({ textContent }) => textContent)
 }
 
-function getRows(container: HTMLElement) {
+function getRows(container: Element) {
   return container.querySelectorAll('tbody tr')
 }
 
-const rowHeight = 5 as const
-const height = 15 as const
-
-function scrollToRow(to: number) {
-  const scrollEl = screen.getByTestId('vlist-table')
-  fireEvent.scroll(scrollEl, { target: { scrollTop: to * rowHeight } })
+function scrollToRow(scrollEl: Element, rowNumber: number, rowHeight: number) {
+  fireEvent.scroll(scrollEl, { target: { scrollTop: rowNumber * rowHeight } })
   act(() => jest.runAllTimers())
 }
 
-function arrangeTest(rows: Props['rows']) {
-  const result = render(<ListWithActions {...{ rowHeight, height, rows }} />)
-  const scrollEl = result.getByTestId('vlist-table')
+function arrangeTest(rows: Props['rows'], useDefaults = false) {
+  const effectiveProps = !useDefaults
+    ? {
+        height: 15,
+        rowHeight: 5,
+        rows
+      }
+    : { rows }
+
+  const { container } = render(<ListWithActions {...effectiveProps} />)
+
+  const scrollEl = container.querySelector('.VList-table')!
+  const {
+    rowHeight = 85, // same as in component definiton
+    rows: { length }
+  } = effectiveProps
 
   Object.defineProperty(scrollEl, 'scrollHeight', {
     configurable: true,
-    value: rowHeight * rows.length
+    value: rowHeight * length
   })
 
-  return result
+  return { container, rowHeight, scrollEl }
 }
 
 const twoRows = fill(2).map((_, i) => newItem(i))
@@ -94,10 +103,10 @@ describe('ListWithActions', () => {
     })
 
     it('renders a slice of the rows when list is scrolled', () => {
-      const { container } = arrangeTest(twentyFiveRows)
+      const { container, rowHeight, scrollEl } = arrangeTest(twentyFiveRows)
 
       // to the middle
-      scrollToRow(~~(25 / 2))
+      scrollToRow(scrollEl, ~~(25 / 2), rowHeight)
 
       // enough items to scroll both ways
       expect(getFirstColumn(container)).toStrictEqual([
@@ -116,7 +125,7 @@ describe('ListWithActions', () => {
       ])
 
       // to the end
-      scrollToRow(25)
+      scrollToRow(scrollEl, 25, rowHeight)
 
       // enough items to scroll to top
       expect(getFirstColumn(container)).toStrictEqual([
@@ -133,9 +142,7 @@ describe('ListWithActions', () => {
       const { container } = arrangeTest(twentyFiveRows)
 
       fireEvent.click(screen.getByText('⬇️'))
-      act(() => {
-        jest.advanceTimersByTime(800)
-      })
+      act(() => jest.runAllTimers())
 
       expect(getFirstColumn(container)).toStrictEqual([
         'Item #20',
@@ -152,9 +159,7 @@ describe('ListWithActions', () => {
 
       // go to bottom fist
       fireEvent.click(screen.getByText('⬇️'))
-      act(() => {
-        jest.advanceTimersByTime(100)
-      })
+      act(() => jest.runAllTimers())
 
       expect(getFirstColumn(container)).toStrictEqual([
         'Item #20',
@@ -167,9 +172,7 @@ describe('ListWithActions', () => {
 
       // and back to top then
       fireEvent.click(screen.getByText('⬆️'))
-      act(() => {
-        jest.advanceTimersByTime(100)
-      })
+      act(() => jest.runAllTimers())
 
       expect(getFirstColumn(container)).toStrictEqual([
         'Item #1',
@@ -182,10 +185,10 @@ describe('ListWithActions', () => {
     })
 
     it('goes to top on button click after list was scrolled', () => {
-      const { container } = arrangeTest(twentyFiveRows)
+      const { container, rowHeight, scrollEl } = arrangeTest(twentyFiveRows)
 
       // to the middle
-      scrollToRow(~~(25 / 2))
+      scrollToRow(scrollEl, ~~(25 / 2), rowHeight)
 
       expect(getFirstColumn(container)).toStrictEqual([
         'Item #7',
@@ -204,9 +207,7 @@ describe('ListWithActions', () => {
 
       // and back to top
       fireEvent.click(screen.getByText('⬆️'))
-      act(() => {
-        jest.advanceTimersByTime(100)
-      })
+      act(() => jest.runAllTimers())
 
       expect(getFirstColumn(container)).toStrictEqual([
         'Item #1',
