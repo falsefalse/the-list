@@ -1,6 +1,6 @@
 import React, { RefObject } from 'react'
 
-import useAnimate from './use-animate'
+import { useAnimate } from './hooks'
 
 type Props<T> = {
   handleAdd: () => void

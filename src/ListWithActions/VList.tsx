@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 
 import { Row, HeaderRow } from './Rows'
-import { useThrottledScrollHandler } from './use-animate'
+import { useForwardRef, useThrottledScrollHandler } from './hooks'
 
 import './VList.css'
 
@@ -26,7 +26,7 @@ type ScrollState = {
 
 function VList(
   { rows, rowHeight, height }: Props,
-  tableRef: ForwardedRef<HTMLTableElement>
+  forwardedRef: ForwardedRef<HTMLTableElement>
 ) {
   const numberOfRowsToRender = ceil(height / rowHeight) * 2
 
@@ -35,7 +35,9 @@ function VList(
     end: numberOfRowsToRender
   })
 
-  const handleScroll = useThrottledScrollHandler(scrollTop => {
+  const scrollRef = useForwardRef(forwardedRef)
+
+  useThrottledScrollHandler(scrollRef, scrollTop => {
     const start = floor(scrollTop / rowHeight)
 
     setScrollState({
@@ -71,12 +73,7 @@ function VList(
         </thead>
       </table>
 
-      <table
-        className="VList-table"
-        onScroll={handleScroll}
-        ref={tableRef}
-        data-testid="vlist-table"
-      >
+      <table className="VList-table" ref={scrollRef}>
         <tbody>{visibleRows}</tbody>
       </table>
     </div>

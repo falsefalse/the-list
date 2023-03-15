@@ -22,7 +22,7 @@ export default function ListWithActions({
   rowHeight = 85,
   height = 420
 }: Props) {
-  const tableRef = useRef<HTMLTableElement | null>(null)
+  const tableRef = useRef<HTMLTableElement>(null)
 
   const [rows, setRows] = useState(passedRows)
 
@@ -34,7 +34,7 @@ export default function ListWithActions({
         </h3>
 
         <Actions
-          handleAdd={() => setRows(rows => [...addRow(rows)])}
+          handleAdd={() => setRows(rows => addRow(rows))}
           scrollRef={tableRef}
         />
       </header>
